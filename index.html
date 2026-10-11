@@ -1953,40 +1953,59 @@ html[data-chroma="on"] #stageContainer { display: none !important; }
     setInterval(forzarMuteDecorativos, 4000);
   })();
 
-  /* PWA */
+  /* ============================================================
+     PWA — solo se muestra cuando el usuario pulsa "Descargar"
+     (el botón del CTA de la sección final)
+     ============================================================ */
   const pwaNotif = document.getElementById('pwaNotif');
   const pwaInstallBtn = document.getElementById('pwaInstallBtn');
   const pwaCloseBtn = document.getElementById('pwaCloseBtn');
   window.__deferredInstallPrompt = null;
   const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const yaMostrada = sessionStorage.getItem('archinime_pwa_notif_v29_shown') === '1';
 
-  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); window.__deferredInstallPrompt = e; });
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    window.__deferredInstallPrompt = e;
+  });
 
+  let _pwaTimer = null;
   function mostrarPwaNotif() {
-    if (!pwaNotif || isStandalone() || yaMostrada) return;
+    if (!pwaNotif || isStandalone()) return;
     pwaNotif.classList.add('show');
-    sessionStorage.setItem('archinime_pwa_notif_v29_shown', '1');
-    setTimeout(() => pwaNotif.classList.remove('show'), 12000);
+    clearTimeout(_pwaTimer);
+    _pwaTimer = setTimeout(() => pwaNotif.classList.remove('show'), 15000);
   }
-  window.addEventListener('load', () => setTimeout(mostrarPwaNotif, 2500));
-  if (pwaCloseBtn) pwaCloseBtn.addEventListener('click', () => pwaNotif.classList.remove('show'));
+  function ocultarPwaNotif() {
+    if (!pwaNotif) return;
+    clearTimeout(_pwaTimer);
+    pwaNotif.classList.remove('show');
+  }
 
-  window.instalarPWA = async function(opts) {
+  if (pwaCloseBtn) pwaCloseBtn.addEventListener('click', ocultarPwaNotif);
+
+  // Se llama desde el botón "Descargar" del CTA final (onclick="instalarPWA({scroll:true})")
+  window.instalarPWA = function(opts) {
     opts = opts || {};
-    const scrollToCatalog = opts.scroll === true;
-    const silent = opts.silent === true;
-    if (scrollToCatalog) { try { document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' }); } catch(_) {} }
+    if (opts.scroll === true) {
+      try { document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' }); } catch(_) {}
+    }
     if (isStandalone()) {
-      if (!silent && typeof window.showToastSticker === 'function') { try { window.showToastSticker('✅ La app ya está instalada'); } catch(_) {} }
+      if (typeof window.showToastSticker === 'function') {
+        try { window.showToastSticker('✅ La app ya está instalada'); } catch(_) {}
+      }
       return;
     }
+    // 👉 Aquí es donde se muestra el popup SOLO al pulsar el botón
+    mostrarPwaNotif();
+  };
+
+  // Instalación real: cuando el usuario pulsa "Instalar" dentro del popup
+  async function ejecutarInstalacionPWA() {
+    if (isStandalone()) { ocultarPwaNotif(); return; }
     if (isIos()) {
-      if (!silent) {
-        const delay = scrollToCatalog ? 700 : 0;
-        setTimeout(() => alert('📲 En iOS: Comparte → "Añadir a pantalla de inicio"'), delay);
-      }
+      alert('📲 En iOS: Comparte → "Añadir a pantalla de inicio"');
+      ocultarPwaNotif();
       return;
     }
     if (window.__deferredInstallPrompt) {
@@ -1995,18 +2014,17 @@ html[data-chroma="on"] #stageContainer { display: none !important; }
         const choice = await window.__deferredInstallPrompt.userChoice;
         if (choice && choice.outcome === 'accepted') {
           window.__deferredInstallPrompt = null;
-          if (pwaNotif) pwaNotif.classList.remove('show');
+          ocultarPwaNotif();
         }
-      } catch(e) {}
+      } catch (e) {}
       return;
     }
-    if (!silent) {
-      if (scrollToCatalog) {
-        setTimeout(() => { if (typeof window.showToastSticker === 'function') { try { window.showToastSticker('📲 Instálala desde el menú de Chrome'); } catch(_) {} } }, 900);
-      } else alert('📲 Instálala desde el menú de Chrome');
-    }
-  };
-  if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', () => window.instalarPWA({ scroll: false }));
+    alert('📲 Instálala desde el menú de Chrome');
+  }
+  if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', ejecutarInstalacionPWA);
+
+  // ⚠️ NO ponemos window.addEventListener('load', mostrarPwaNotif)
+  //    → así ya NO aparece sola al cargar la página.
 
   const searchToggleMobile = document.getElementById('searchToggleMobile');
   const searchWrapper = document.getElementById('searchWrapper');
@@ -2030,7 +2048,7 @@ html[data-chroma="on"] #stageContainer { display: none !important; }
     if (sugg) sugg.addEventListener('click', () => setTimeout(() => searchWrapper.classList.remove('active'), 200));
   }
 
-  console.log('%c✅ Archinime v30 · Calidad forzada: ALTA · bgVideo: ' + (config.bgVideo !== false ? 'ON' : 'OFF') + ' · Cursor: ' + (config.cursor ? 'ON' : 'OFF'), 'color:#00f0ff;font-family:monospace;font-weight:bold;');
+  console.log('%c✅ Archinime v30 · Calidad forzada: ALTA · bgVideo: ' + (config.bgVideo !== false ? 'ON' : 'OFF') + ' · Cursor: ' + (config.cursor ? 'ON' : 'OFF') + ' · PWA auto-popup: DISABLED (solo al pulsar botón Descargar)', 'color:#00f0ff;font-family:monospace;font-weight:bold;');
 })();
 </script>
 
