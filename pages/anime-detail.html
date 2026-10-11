@@ -808,31 +808,6 @@ details[open] summary::after { transform: rotate(180deg); color: var(--neon-1); 
 #configModal .config-save:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,240,255,0.5); color: #fff; }
 
 /* ============================================
-   PWA
-   ============================================ */
-#pwaNotif { position: fixed; top: calc(72px + var(--safe-top)); left: 50%; transform: translate(-50%, -150%); background: linear-gradient(135deg, rgba(10,12,20,0.98), rgba(20,10,35,0.98)); border: 1px solid rgba(0,240,255,0.4); border-radius: 20px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(0,240,255,0.2); z-index: 10005; max-width: 90vw; width: 380px; transition: transform 0.6s cubic-bezier(0.19,1,0.22,1), opacity 0.4s; opacity: 0; pointer-events: none; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-#pwaNotif.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
-#pwaNotif .pwa-icon { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, #00f0ff, #b114ff); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: #04050a; flex-shrink: 0; box-shadow: 0 0 20px rgba(0,240,255,0.4); animation: pwaPulse 2s ease-in-out infinite; }
-@keyframes pwaPulse { 0%,100% { box-shadow: 0 0 20px rgba(0,240,255,0.4); } 50% { box-shadow: 0 0 35px rgba(0,240,255,0.7), 0 0 50px rgba(177,20,255,0.4); } }
-#pwaNotif .pwa-content { flex: 1; min-width: 0; }
-#pwaNotif .pwa-title { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 0.82rem; color: #00f0ff; letter-spacing: 1px; margin-bottom: 2px; text-shadow: 0 0 12px rgba(0,240,255,0.5); }
-#pwaNotif .pwa-text { font-size: 0.75rem; color: #8a90a0; line-height: 1.3; }
-#pwaNotif .pwa-actions { display: flex; gap: 6px; flex-shrink: 0; }
-#pwaNotif .pwa-install-btn { background: linear-gradient(135deg, #00f0ff, #b114ff); color: #04050a; border: none; padding: 8px 14px; border-radius: 100px; font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 0.68rem; letter-spacing: 1px; cursor: pointer; transition: all 0.25s; white-space: nowrap; }
-#pwaNotif .pwa-install-btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(0,240,255,0.6); }
-#pwaNotif .pwa-close-btn { background: transparent; border: none; color: #8a90a0; font-size: 1rem; padding: 6px; cursor: pointer; transition: color 0.2s; align-self: flex-start; }
-#pwaNotif .pwa-close-btn:hover { color: #ff1a6b; }
-@media (max-width: 600px) {
-  #pwaNotif { top: calc(60px + var(--safe-top)); width: calc(100vw - 24px); max-width: none; padding: 10px 12px; gap: 10px; border-radius: 16px; }
-  #pwaNotif .pwa-icon { width: 34px; height: 34px; font-size: 1rem; border-radius: 10px; }
-  #pwaNotif .pwa-title { font-size: 0.68rem; letter-spacing: 0.6px; margin-bottom: 1px; }
-  #pwaNotif .pwa-text { font-size: 0.6rem; line-height: 1.2; }
-  #pwaNotif .pwa-install-btn { padding: 6px 12px; font-size: 0.6rem; letter-spacing: 0.6px; }
-  #pwaNotif .pwa-close-btn { font-size: 0.85rem; padding: 4px; position: absolute; top: 4px; right: 4px; }
-  #pwaNotif .pwa-content { padding-right: 16px; }
-}
-
-/* ============================================
    RIPPLE
    ============================================ */
 .ripple { position: fixed; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--neon-1); pointer-events: none; z-index: 99998; transform: translate(-50%, -50%) scale(0); animation: rippleAnim 0.8s var(--ease-out-expo) forwards; }
@@ -866,7 +841,6 @@ html {
   --q-panel-bg: color-mix(in srgb, var(--bg-panel) 92%, transparent);
   --q-vignette-strength: 80%;
 }
-/* Forzado permanente a "alta" */
 html[data-quality="alta"] {
   --q-blur-aurora: 28px;
   --q-aurora-opacity: 0.36;
@@ -970,7 +944,6 @@ html[data-quality="alta"] .nav-logo .dot { animation: none !important; }
 html[data-quality="alta"] .nav-logo .txt { animation: none !important; background-position: 0% 50% !important; }
 html[data-quality="alta"] .nav-status .status-led { animation: none !important; }
 html[data-quality="alta"] .theme-dot.active::after { animation: none !important; }
-html[data-quality="alta"] .pwa-icon { animation: none !important; }
 @media (max-width: 768px) {
   html[data-quality="alta"] .nav-logo .logo-img { filter: none !important; }
   html[data-quality="alta"] .aurora { display: none !important; }
@@ -1090,16 +1063,6 @@ html[data-quality="alta"] .scanlines { display: none !important; }
 </div>
 
 <div id="toast" class="toast">Enlace copiado</div>
-
-<div id="pwaNotif">
-  <div class="pwa-icon"><i class="fas fa-rocket"></i></div>
-  <div class="pwa-content">
-    <div class="pwa-title">INSTALA ARCHINIME</div>
-    <div class="pwa-text">Acceso rápido desde tu pantalla de inicio</div>
-  </div>
-  <div class="pwa-actions"><button class="pwa-install-btn" id="pwaInstallBtn">Instalar</button></div>
-  <button class="pwa-close-btn" id="pwaCloseBtn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
-</div>
 
 <!-- ═══ CONFIG (solo tema y cursor) ═══ -->
 <div id="configModal">
@@ -1539,48 +1502,6 @@ window.showToast = showToast;
 })();
 
 /* ============================================================
-   PWA
-   ============================================================ */
-(function() {
-  const pwaNotif = document.getElementById('pwaNotif');
-  const pwaInstallBtn = document.getElementById('pwaInstallBtn');
-  const pwaCloseBtn = document.getElementById('pwaCloseBtn');
-  window.__deferredInstallPrompt = null;
-  const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const yaMostrada = sessionStorage.getItem('archinime_pwa_detail_v30_shown') === '1';
-
-  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); window.__deferredInstallPrompt = e; });
-
-  function mostrarPwaNotif() {
-    if (!pwaNotif || isStandalone() || yaMostrada) return;
-    pwaNotif.classList.add('show');
-    sessionStorage.setItem('archinime_pwa_detail_v30_shown', '1');
-    setTimeout(() => pwaNotif.classList.remove('show'), 12000);
-  }
-  window.addEventListener('load', () => setTimeout(mostrarPwaNotif, 2500));
-  pwaCloseBtn?.addEventListener('click', () => pwaNotif.classList.remove('show'));
-
-  window.instalarPWA = async function() {
-    if (isStandalone()) { showToast('✅ La app ya está instalada'); return; }
-    if (isIos()) { alert('📲 En iOS: Comparte → "Añadir a pantalla de inicio"'); return; }
-    if (window.__deferredInstallPrompt) {
-      try {
-        window.__deferredInstallPrompt.prompt();
-        const choice = await window.__deferredInstallPrompt.userChoice;
-        if (choice && choice.outcome === 'accepted') {
-          window.__deferredInstallPrompt = null;
-          pwaNotif.classList.remove('show');
-        }
-      } catch(e) {}
-      return;
-    }
-    alert('📲 Instálala desde el menú de Chrome');
-  };
-  if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', () => window.instalarPWA());
-})();
-
-/* ============================================================
    SERVICE WORKER
    ============================================================ */
 if ('serviceWorker' in navigator) {
@@ -1591,7 +1512,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-console.log('%c✅ Archinime Detail v30 · Calidad forzada: ALTA · Cursor: ' + (window.__archinimeConfig?.cursor ? 'ON' : 'OFF'), 'color:#00f0ff;font-family:monospace;font-weight:bold;');
+console.log('%c✅ Archinime Detail v30 · Calidad forzada: ALTA · Cursor: ' + (window.__archinimeConfig?.cursor ? 'ON' : 'OFF') + ' · PWA notification: DISABLED', 'color:#00f0ff;font-family:monospace;font-weight:bold;');
 </script>
 
 </body>
